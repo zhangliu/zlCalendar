@@ -59,10 +59,10 @@ class App extends React.Component {
       return;
     }
     histoy.mouseUpBox = box
-
-    [histoy.mouseDownBox.boxIndex, histoy.mouseUpBox.boxIndex, histoy.mouseOverBox.boxIndex]
-      = [histoy.mouseDownBox.boxIndex, histoy.mouseUpBox.boxIndex, histoy.mouseOverBox.boxIndex].sort()
-
+    if (histoy.mouseDownBox.boxIndex >= histoy.mouseUpBox.boxIndex) {
+      [histoy.mouseDownBox.boxIndex, histoy.mouseUpBox.boxIndex, histoy.mouseOverBox.boxIndex]
+        = [histoy.mouseDownBox.boxIndex, histoy.mouseUpBox.boxIndex, histoy.mouseOverBox.boxIndex].sort()
+    }
     this.setState(this.state)
   }
 
