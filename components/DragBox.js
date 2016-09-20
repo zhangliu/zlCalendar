@@ -91,7 +91,7 @@ class DragBox extends React.Component {
 
   onDragStart(e) {
     const currentBox = this.getCurrentBox(e)
-    e.dataTransfer.setDragImage(this.props.config.dragBox.dragImg, 0, 0);
+    e.dataTransfer.setDragImage(this.props.config.dragImg, 0, 0);
     this.props.onUpdateDragStartBox(this.props.data.id, currentBox)
   }
 

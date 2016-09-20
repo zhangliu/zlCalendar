@@ -22,31 +22,21 @@ class App extends React.Component {
         boxListNum: 7,
       },
 
+      dragImg: (() => {
+        const img = new Image(0, 0)
+        img.src = `data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJA
+        AAAC0lEQVR42mNgAAIAAAUAAen63NgAAAAASUVORK5CYII=`
+        return img
+      })(),
+
       dragBox: {
-        dragImg: (() => {
-          const img = new Image(0, 0)
-          img.src = `data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJA
-                     AAAC0lEQVR42mNgAAIAAAUAAen63NgAAAAASUVORK5CYII=`
-          return img
-        })(),
+        onOver: () => {},
 
-        onOver: (obj) => {
-          obj.setContent(`${obj.startBox.boxListIndex}:${obj.startBox.boxIndex}
-            ~
-            ${obj.endBox.boxListIndex}:${obj.endBox.boxIndex}`)
-        },
-
-        onChange: (obj) => {
-          obj.setContent(`${obj.startBox.boxListIndex}:${obj.startBox.boxIndex}
-            ~
-            ${obj.endBox.boxListIndex}:${obj.endBox.boxIndex}`)
-        },
+        onChange: () => {},
       },
 
       header: {
-        onDayChange: (startTime, endTime) => {
-          console.log(startTime, endTime)
-        },
+        onWeekChange: () => {},
       },
     }
     this.config = Object.assign(config, this.props.config)
@@ -59,9 +49,12 @@ class App extends React.Component {
   render() {
     return (
       <div className='app'>
-        <Header config={this.config}/>
+        <Header
+          config={this.config}
+          onWeekChange={this.onWeekChange.bind(this)}/>
         <div className='appContainer'>
-          <TimeNav config={this.config}/>
+          <TimeNav
+            config={this.config}/>
           <div className='appTable'>
             <BoxTable
               config={this.config}
@@ -108,6 +101,7 @@ class App extends React.Component {
       this.config.dragBox.onChange({
         startBox: history.startBox,
         endBox: history.overBox,
+        content: history.content,
         setContent: (content) => {
           history.content = content
           this.setState(this.state)
@@ -179,6 +173,18 @@ class App extends React.Component {
     }
     this.setState(this.state)
     this.noticeChange(history)
+  }
+
+  onWeekChange(startTime, endTime) {
+    this.props.config.header.onWeekChange({
+      startTime: startTime,
+      endTime: endTime,
+      mouseHistories: this.state.mouseHistories,
+      setMouseHistories: histories => {
+        this.state.mouseHistories = histories
+        this.setState(this.state)
+      },
+    })
   }
 }
 

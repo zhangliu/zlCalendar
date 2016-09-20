@@ -62,10 +62,7 @@ class Header extends React.Component {
   onClick(weekIndex) {
     const days = this.getWeekDays(weekIndex)
     this.setState({days: days})
-
-    if (this.props.config.header.onDayChange) {
-      this.props.config.header.onDayChange(days[0].time, days[days.length - 1].time)
-    }
+    this.props.onWeekChange(days[0].time, days[days.length - 1].time)
   }
 }
 
