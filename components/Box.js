@@ -14,7 +14,7 @@ class Box extends React.Component {
       <div
         ref='box'
         style={{width: config.box.width, height: config.box.height}}
-        className='box'
+        className={this.props.boxIndex % 2 ? 'oddBox' : 'evenBox'}
         id={`box${this.props.boxListIndex}:${this.props.boxIndex}`}
         onMouseOver={this.onMouseOver}
         onMouseDown={this.onMouseDown}
@@ -28,7 +28,7 @@ class Box extends React.Component {
       boxListIndex: this.props.boxListIndex,
       boxIndex: this.props.boxIndex,
     }
-    this.props.onUpdateMouseDownBox(box)
+    this.props.onUpdateStartBox(box)
   }
 
   onMouseOver() {
@@ -36,7 +36,7 @@ class Box extends React.Component {
       boxListIndex: this.props.boxListIndex,
       boxIndex: this.props.boxIndex,
     }
-    this.props.onUpdateMouseOverBox(box)
+    this.props.onUpdateOverBox(box)
   }
 
   onMouseUp() {
@@ -44,7 +44,7 @@ class Box extends React.Component {
       boxListIndex: this.props.boxListIndex,
       boxIndex: this.props.boxIndex,
     }
-    this.props.onUpdateMouseUpBox(box)
+    this.props.onUpdateEndBox(box)
   }
 }
 

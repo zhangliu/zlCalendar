@@ -9,68 +9,69 @@ class DragBox extends React.Component {
     this.onDragSpanMouseDown = this.onDragSpanMouseDown.bind(this)
     this.onDragStart = this.onDragStart.bind(this)
     this.onDragOver = this.onDragOver.bind(this)
-    this.boxConfig = this.props.config.box;
-    this.currentBox = null;
+    this.boxConfig = this.props.config.box
+    this.currentBox = null
   }
 
   render() {
-    const mouseDownBox = this.props.data.mouseDownBox;
-    let mouseOverBox = this.props.data.mouseOverBox;
-    mouseOverBox = mouseOverBox ? mouseOverBox : mouseDownBox;
+    const startBox = this.props.data.startBox;
+    let overBox = this.props.data.overBox;
+    overBox = overBox ? overBox : startBox;
 
-    const top = mouseOverBox.boxIndex >= mouseDownBox.boxIndex
-      ? mouseDownBox.boxIndex * this.boxConfig.height
-      : mouseOverBox.boxIndex * this.boxConfig.height
+    const top = overBox.boxIndex >= startBox.boxIndex
+      ? startBox.boxIndex * this.boxConfig.height
+      : overBox.boxIndex * this.boxConfig.height
 
-    const height = (Math.abs(mouseOverBox.boxIndex - mouseDownBox.boxIndex) + 1)
+    const height = (Math.abs(overBox.boxIndex - startBox.boxIndex) + 1)
       * this.boxConfig.height - 5
     const style = {
       top: top,
-      left: this.boxConfig.width * mouseDownBox.boxListIndex,
+      left: this.boxConfig.width * startBox.boxListIndex,
       width: this.boxConfig.width - 5,
       height: height,
     }
     return (
       <div
-      draggable={this.props.data.mouseUpBox ? true : false}
-      className={this.props.data.mouseUpBox ? 'dragedBox' : 'dragingBox'}
-      style={style}
-      onDragStart={this.onDragStart}
-      onDragOver={this.onDragOver}
-      onDragEnd={this.onDragEnd}
-      onMouseMove={this.onMouseMove}
-      onMouseUp={this.onMouseUp}>
+        draggable={this.props.data.endBox ? true : false}
+        className={this.props.data.endBox ? 'dragedBox' : 'dragingBox'}
+        style={style}
+        onDragStart={this.onDragStart}
+        onDragOver={this.onDragOver}
+        onDragEnd={this.onDragEnd}
+        onMouseMove={this.onMouseMove}
+        onMouseUp={this.onMouseUp}>
+        <div>{this.props.data.content}</div>
         <span onMouseDown={this.onDragSpanMouseDown}></span>
       </div>
     )
   }
 
   onMouseMove(e) {
-    if (this.props.data.mouseUpBox) {
+    if (this.props.data.endBox) {
       return;
     }
-    let mouseOverBox = this.props.data.mouseOverBox
-    mouseOverBox = mouseOverBox ? mouseOverBox : this.props.data.mouseDownBox
+    let overBox = this.props.data.overBox
+    overBox = overBox ? overBox : this.props.data.startBox
 
     const currentBox = this.getCurrentBox(e)
-    if (mouseOverBox.boxIndex === currentBox.boxIndex) {
+    if (overBox.boxIndex === currentBox.boxIndex) {
       return
     }
-    this.props.onUpdateMouseOverBox(currentBox)
+    this.props.onUpdateOverBox(currentBox)
   }
 
   getCurrentBox(e) {
-    const mouseDownBox = this.props.data.mouseDownBox;
-    let mouseOverBox = this.props.data.mouseOverBox;
-    mouseOverBox = mouseOverBox ? mouseOverBox : mouseDownBox;
+    const startBox = this.props.data.startBox;
+    let overBox = this.props.data.overBox;
+    overBox = overBox ? overBox : startBox;
 
     const position = mouseHelper.getRelativePosition(e)
 
     let dragBoxStartBox = null
-    if (mouseOverBox.boxIndex >= mouseDownBox.boxIndex) {
-      dragBoxStartBox = mouseDownBox
+    if (overBox.boxIndex >= startBox.boxIndex) {
+      dragBoxStartBox = startBox
     } else {
-      dragBoxStartBox = mouseOverBox
+      dragBoxStartBox = overBox
     }
     const currentBox = {
       boxListIndex: dragBoxStartBox.boxListIndex,
@@ -81,15 +82,16 @@ class DragBox extends React.Component {
 
   onMouseUp(e) {
     const currentBox = this.getCurrentBox(e)
-    this.props.onUpdateMouseUpBox(currentBox)
+    this.props.onUpdateEndBox(currentBox)
   }
 
   onDragSpanMouseDown() {
-    this.props.onDeleteMouseUpBox(this.props.data.id)
+    this.props.onDeleteEndBox(this.props.data.id)
   }
 
   onDragStart(e) {
     const currentBox = this.getCurrentBox(e)
+    e.dataTransfer.setDragImage(this.props.config.dragBox.dragImg, 0, 0);
     this.props.onUpdateDragStartBox(this.props.data.id, currentBox)
   }
 

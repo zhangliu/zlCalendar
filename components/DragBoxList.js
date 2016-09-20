@@ -4,7 +4,6 @@ import DragBox from './DragBox'
 class DragBoxList extends React.Component {
   constructor(props) {
     super(props)
-    this.dragBoxList = new Map();
   }
 
   render() {

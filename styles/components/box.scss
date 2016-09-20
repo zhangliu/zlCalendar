@@ -3,3 +3,13 @@
   border-style: solid;
   border-color: #ddd;
 }
+
+.oddBox {
+  @extend .box;
+}
+
+.evenBox {
+  @extend .box;
+  // border-bottom-color: #f1f1f1;
+  border-bottom-style: dotted;
+}

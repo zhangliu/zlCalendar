@@ -1,10 +1,55 @@
+/* global Image */
 import React from 'react'
 import BoxTable from './BoxTable'
 import DragBoxList from './DragBoxList'
+import Header from './Header'
+import TimeNav from './TimeNav'
 
 class App extends React.Component {
   constructor(props) {
     super(props)
+    const config = {
+      box: {
+        width: 120, // 单位px
+        height: 20,
+      },
+
+      boxList: {
+        boxNum: 48,
+      },
+
+      boxTable: {
+        boxListNum: 7,
+      },
+
+      dragBox: {
+        dragImg: (() => {
+          const img = new Image(0, 0)
+          img.src = `data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJA
+                     AAAC0lEQVR42mNgAAIAAAUAAen63NgAAAAASUVORK5CYII=`
+          return img
+        })(),
+
+        onOver: (obj) => {
+          obj.setContent(`${obj.startBox.boxListIndex}:${obj.startBox.boxIndex}
+            ~
+            ${obj.endBox.boxListIndex}:${obj.endBox.boxIndex}`)
+        },
+
+        onChange: (obj) => {
+          obj.setContent(`${obj.startBox.boxListIndex}:${obj.startBox.boxIndex}
+            ~
+            ${obj.endBox.boxListIndex}:${obj.endBox.boxIndex}`)
+        },
+      },
+
+      header: {
+        onDayChange: (startTime, endTime) => {
+          console.log(startTime, endTime)
+        },
+      },
+    }
+    this.config = Object.assign(config, this.props.config)
     this.state = {
       mouseHistories: props.mouseHistories,
     }
@@ -14,63 +59,86 @@ class App extends React.Component {
   render() {
     return (
       <div className='app'>
-        <BoxTable
-          config={this.props.config}
-          onUpdateMouseDownBox={this.onUpdateMouseDownBox.bind(this)}
-          onUpdateMouseUpBox={this.onUpdateMouseUpBox.bind(this)}
-          onUpdateMouseOverBox={this.onUpdateMouseOverBox.bind(this)}
-          onUpdateDragOverBox={this.onUpdateDragOverBox.bind(this)}>
-        </BoxTable>
-        <DragBoxList
-          config={this.props.config}
-          onUpdateMouseDownBox={this.onUpdateMouseDownBox.bind(this)}
-          onUpdateMouseUpBox={this.onUpdateMouseUpBox.bind(this)}
-          onUpdateMouseOverBox={this.onUpdateMouseOverBox.bind(this)}
-          onDeleteMouseUpBox={this.onDeleteMouseUpBox.bind(this)}
-          onUpdateDragStartBox={this.onUpdateDragStartBox.bind(this)}
-          onUpdateDragOverBox={this.onUpdateDragOverBox.bind(this)}
-          data={this.state.mouseHistories}/>
+        <Header config={this.config}/>
+        <div className='appContainer'>
+          <TimeNav config={this.config}/>
+          <div className='appTable'>
+            <BoxTable
+              config={this.config}
+              onUpdateStartBox={this.onUpdateStartBox.bind(this)}
+              onUpdateEndBox={this.onUpdateEndBox.bind(this)}
+              onUpdateOverBox={this.onUpdateOverBox.bind(this)}
+              onUpdateDragOverBox={this.onUpdateDragOverBox.bind(this)}>
+            </BoxTable>
+            <DragBoxList
+              config={this.config}
+              onUpdateStartBox={this.onUpdateStartBox.bind(this)}
+              onUpdateEndBox={this.onUpdateEndBox.bind(this)}
+              onUpdateOverBox={this.onUpdateOverBox.bind(this)}
+              onDeleteEndBox={this.onDeleteEndBox.bind(this)}
+              onUpdateDragStartBox={this.onUpdateDragStartBox.bind(this)}
+              onUpdateDragOverBox={this.onUpdateDragOverBox.bind(this)}
+              data={this.state.mouseHistories}/>
+          </div>
+        </div>
       </div>
     )
   }
 
-  onUpdateMouseDownBox(box) {
+  onUpdateStartBox(box) {
     const histories = this.state.mouseHistories
-    histories.push({id: this.historyId++, mouseDownBox: box})
+    histories.push({id: this.historyId++, startBox: box})
     this.setState(this.state)
   }
 
-  onUpdateMouseOverBox(box) {
+  onUpdateOverBox(box) {
     const histories = this.state.mouseHistories
-    const history = histories.find(h => !h.mouseUpBox)
+    const history = histories.find(h => !h.endBox)
     if (!history) {
       return
     }
-    history.mouseOverBox = box
+    history.overBox = box
     this.setState(this.state)
+
+    this.noticeChange(history)
   }
 
-  onUpdateMouseUpBox(box) {
+  noticeChange(history) {
+    if (this.config.dragBox.onChange) {
+      this.config.dragBox.onChange({
+        startBox: history.startBox,
+        endBox: history.overBox,
+        setContent: (content) => {
+          history.content = content
+          this.setState(this.state)
+        },
+      })
+    }
+  }
+
+  onUpdateEndBox(box) {
     const histories = this.state.mouseHistories
-    const history = histories.find(h => !h.mouseUpBox)
+    const history = histories.find(h => !h.endBox)
     if (!history) {
       return;
     }
-    history.mouseUpBox = box
+    history.endBox = box
 
-    if (history.mouseDownBox.boxIndex > history.mouseUpBox.boxIndex) {
-      [history.mouseDownBox.boxIndex, history.mouseUpBox.boxIndex]
-        = [history.mouseUpBox.boxIndex, history.mouseDownBox.boxIndex]
+    if (history.startBox.boxIndex > history.endBox.boxIndex) {
+      [history.startBox.boxIndex, history.endBox.boxIndex]
+        = [history.endBox.boxIndex, history.startBox.boxIndex]
     }
 
-    history.mouseOverBox = Object.assign({}, history.mouseUpBox)
+    history.overBox = Object.assign({}, history.endBox)
     this.setState(this.state)
+
+    this.noticeChange(history)
   }
 
-  onDeleteMouseUpBox(id) {
+  onDeleteEndBox(id) {
     const histories = this.state.mouseHistories
     const history = histories.find(h => h.id === id)
-    history.mouseUpBox = null
+    history.endBox = null
     this.setState(this.state)
   }
 
@@ -95,8 +163,8 @@ class App extends React.Component {
 
     // 判断有没有拖越界
     const [minIndex, maxIndex]
-      = [history.mouseDownBox.boxIndex, history.mouseUpBox.boxIndex].sort((a, b) => a >= b)
-    if ((maxIndex + offsetTopBoxNum > this.props.config.boxList.boxNum - 1)
+      = [history.startBox.boxIndex, history.endBox.boxIndex].sort((a, b) => a >= b)
+    if ((maxIndex + offsetTopBoxNum > this.config.boxList.boxNum - 1)
           || (minIndex + offsetTopBoxNum < 0)) {
       return
     }
@@ -110,6 +178,7 @@ class App extends React.Component {
       history[key].boxIndex = history[key].boxIndex + offsetTopBoxNum
     }
     this.setState(this.state)
+    this.noticeChange(history)
   }
 }
 
