@@ -20,6 +20,14 @@ const config = {
   boxTable: {
     boxListNum: 10,
   },
+
+  dragBox: {
+    onMouseUp: (startBox, endBox) => {
+      console.log(startBox, endBox)
+    },
+  },
 }
 
-render(<App config={config}/>, document.getElementById('container'))
+render(<App
+  mouseHistories={[]}
+  config={config}/>, document.getElementById('container'))

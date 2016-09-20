@@ -6,12 +6,10 @@ class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      mouseHistories: [],
+      mouseHistories: props.mouseHistories,
     }
-
-    this.histoyId = 1
+    this.historyId = 1
   }
-
 
   render() {
     return (
@@ -38,75 +36,78 @@ class App extends React.Component {
 
   onUpdateMouseDownBox(box) {
     const histories = this.state.mouseHistories
-    histories.push({id: this.histoyId++, mouseDownBox: box})
+    histories.push({id: this.historyId++, mouseDownBox: box})
     this.setState(this.state)
   }
 
   onUpdateMouseOverBox(box) {
     const histories = this.state.mouseHistories
-    const histoy = histories.find(h => !h.mouseUpBox)
-    if (!histoy) {
+    const history = histories.find(h => !h.mouseUpBox)
+    if (!history) {
       return
     }
-    histoy.mouseOverBox = box
+    history.mouseOverBox = box
     this.setState(this.state)
   }
 
   onUpdateMouseUpBox(box) {
     const histories = this.state.mouseHistories
-    const histoy = histories.find(h => !h.mouseUpBox)
-    if (!histoy) {
+    const history = histories.find(h => !h.mouseUpBox)
+    if (!history) {
       return;
     }
-    histoy.mouseUpBox = box
-    if (histoy.mouseDownBox.boxIndex >= histoy.mouseUpBox.boxIndex) {
-      [histoy.mouseDownBox.boxIndex, histoy.mouseUpBox.boxIndex, histoy.mouseOverBox.boxIndex]
-        = [histoy.mouseDownBox.boxIndex, histoy.mouseUpBox.boxIndex, histoy.mouseOverBox.boxIndex].sort()
+    history.mouseUpBox = box
+
+    if (history.mouseDownBox.boxIndex > history.mouseUpBox.boxIndex) {
+      [history.mouseDownBox.boxIndex, history.mouseUpBox.boxIndex]
+        = [history.mouseUpBox.boxIndex, history.mouseDownBox.boxIndex]
     }
+
+    history.mouseOverBox = Object.assign({}, history.mouseUpBox)
     this.setState(this.state)
   }
 
   onDeleteMouseUpBox(id) {
     const histories = this.state.mouseHistories
-    const histoy = histories.find(h => h.id === id)
-    histoy.mouseUpBox = null
+    const history = histories.find(h => h.id === id)
+    history.mouseUpBox = null
     this.setState(this.state)
   }
 
   onUpdateDragStartBox(id, dragStartBox) {
     const histories = this.state.mouseHistories
-    let histoy = histories.find(h => h.dragStartBox)
-    if (histoy) {
-      histoy.dragStartBox = null;
+    let history = histories.find(h => h.dragStartBox)
+    if (history) {
+      history.dragStartBox = null;
     }
-    histoy = histories.find(h => h.id === id)
-    histoy.dragStartBox = dragStartBox
+    history = histories.find(h => h.id === id)
+    history.dragStartBox = dragStartBox
     this.setState(this.state)
   }
 
   onUpdateDragOverBox(dragOverBox) {
     const histories = this.state.mouseHistories
-    const histoy = histories.find(h => h.dragStartBox)
-    if (!histoy) {
+    const history = histories.find(h => h.dragStartBox)
+    if (!history) {
       return
     }
-    const offsetTopBoxNum = dragOverBox.boxIndex - histoy.dragStartBox.boxIndex
+    const offsetTopBoxNum = dragOverBox.boxIndex - history.dragStartBox.boxIndex
 
     // 判断有没有拖越界
-    const [minIndex, maxIndex] = [histoy.mouseDownBox.boxIndex, histoy.mouseUpBox.boxIndex].sort()
-
+    const [minIndex, maxIndex]
+      = [history.mouseDownBox.boxIndex, history.mouseUpBox.boxIndex].sort((a, b) => a >= b)
     if ((maxIndex + offsetTopBoxNum > this.props.config.boxList.boxNum - 1)
           || (minIndex + offsetTopBoxNum < 0)) {
       return
     }
     // 修正偏移量
-    const keys = Object.keys(histoy)
+    const keys = Object.keys(history)
     for (const key of keys) {
-      if (!histoy[key] || isNaN(histoy[key].boxListIndex)) {
+      if (!history[key] || isNaN(history[key].boxListIndex)) {
         continue
       }
-      histoy[key].boxListIndex = dragOverBox.boxListIndex
-      histoy[key].boxIndex = histoy[key].boxIndex + offsetTopBoxNum
+      history[key].boxListIndex = dragOverBox.boxListIndex
+      history[key].boxIndex = history[key].boxIndex + offsetTopBoxNum
     }
     this.setState(this.state)
   }
