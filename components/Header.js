@@ -32,7 +32,7 @@ class Header extends React.Component {
           <span key={-1} style={spanStyle}>&nbsp;</span>
           {
             this.state.days.map(day => (
-              <span key={day.id} style={spanStyle}>{day.dateString}({day.weekString})</span>
+              <span key={day.id} style={spanStyle}>{day.dateString}（{day.weekString}）</span>
             ))
           }
         </div>
