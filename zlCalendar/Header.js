@@ -37,14 +37,13 @@ class Header extends React.Component {
           <button onClick={() => this.onClick(1)}>下一周</button>
         </div>
         <div className='days'>
-          <span key={-1} style={spanStyle}>&nbsp;</span>
+          <span className='spanColumn' key={-1} style={spanStyle}>&nbsp;</span>
           {
             this.state.days.map(day => {
-              if (this.state.mode === modeType.NORMAL) {
-                return <span key={day.id} style={spanStyle}>{day.dateString}（{day.weekString}）</span>
-              } else {
-                return <span key={day.id} style={spanStyle}>{day.weekString}</span>
-              }
+              const displayStr = this.state.mode === modeType.NORMAL
+                ? `${day.dateString}（${day.weekString}）`
+                : day.weekString
+              return <span className='spanColumn' key={day.id} style={spanStyle}>{displayStr}</span>
             }
             )
           }

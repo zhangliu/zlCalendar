@@ -25,13 +25,15 @@ class DragBox extends React.Component {
       : overBox.boxIndex * this.boxConfig.height
 
     const height = (Math.abs(overBox.boxIndex - startBox.boxIndex) + 1)
-      * this.boxConfig.height - 5
+      * this.boxConfig.height - 2
     const style = {
       top: top,
       left: this.boxConfig.width * startBox.boxListIndex,
-      width: this.boxConfig.width - 5,
+      width: this.boxConfig.width - 2,
       height: height,
+      backgroundColor: this.props.config.dragBox.backgroundColor,
     }
+
     return (
       <div
         draggable={this.props.data.endBox ? true : false}
@@ -93,7 +95,7 @@ class DragBox extends React.Component {
 
   onDragStart(e) {
     const currentBox = this.getCurrentBox(e)
-    e.dataTransfer.setDragImage(this.props.config.dragImg, 0, 0);
+    e.dataTransfer.setDragImage(this.props.config.dragBox.dragImg, 0, 0);
     this.props.onUpdateDragStartBox(this.props.data.id, currentBox)
   }
 

@@ -5,6 +5,8 @@ import DragBoxList from './DragBoxList'
 import Header from './Header'
 import TimeNav from './TimeNav'
 
+import {deepAssign} from './libs/utility'
+
 import './index.scss'
 
 class Index extends React.Component {
@@ -17,21 +19,24 @@ class Index extends React.Component {
       },
 
       boxList: {
-        boxNum: 48,
+        boxNum: 28,
       },
 
       boxTable: {
         boxListNum: 7,
       },
 
-      dragImg: (() => {
-        const img = new Image(0, 0)
-        img.src = `data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJA
-        AAAC0lEQVR42mNgAAIAAAUAAen63NgAAAAASUVORK5CYII=`
-        return img
-      })(),
 
       dragBox: {
+        dragImg: (() => {
+          const img = new Image(0, 0)
+          img.src = `data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJA
+          AAAC0lEQVR42mNgAAIAAAUAAen63NgAAAAASUVORK5CYII=`
+          return img
+        })(),
+
+        backgroundColor: '#f83a22',
+
         onOver: () => {},
 
         onChange: () => {},
@@ -41,12 +46,25 @@ class Index extends React.Component {
         onWeekChange: () => {},
         mode: 0,
       },
+
+      timeNav: {
+        startHour: 8,
+        endHour: 21,
+      },
     }
-    this.config = Object.assign(config, this.props.config)
+    this.config = deepAssign(config, this.props.config)
     this.state = {
       mouseHistories: props.mouseHistories,
     }
     this.historyId = 1
+  }
+
+  componentDidMount() {
+    this.refs.indexTable.onselectstart = () => false
+  }
+
+  componentWillUnmount() {
+    this.refs.indexTable.onselectstart = null
   }
 
   render() {
@@ -58,7 +76,7 @@ class Index extends React.Component {
         <div className='indexContainer'>
           <TimeNav
             config={this.config}/>
-          <div className='indexTable'>
+          <div ref='indexTable' className='indexTable'>
             <BoxTable
               config={this.config}
               onUpdateStartBox={this.onUpdateStartBox.bind(this)}
@@ -152,7 +170,7 @@ class Index extends React.Component {
 
   onUpdateDragOverBox(dragOverBox) {
     const histories = this.state.mouseHistories
-    const history = histories.find(h => h.dragStartBox)
+    const history = histories.find(h => h.dragStartBox && h.endBox)
     if (!history) {
       return
     }

@@ -1,6 +1,5 @@
 .dragBox {
   position: absolute;
-  background-color: rgb(248, 58, 34);
   border: 1px solid rgb(166, 66, 50);
   cursor: pointer;
   display: flex;
@@ -35,7 +34,6 @@
 .dragedBox {
   @extend .dragBox;
   opacity: 0.8;
-
   span {
     display: inherit;
     cursor: row-resize;

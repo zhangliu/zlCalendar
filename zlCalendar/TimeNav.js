@@ -13,19 +13,16 @@ class TimeNav extends React.Component {
 
   render() {
     const navs = []
-    const offsetMinutes = Math.floor(MINUTES / this.props.config.boxList.boxNum)
     const style = {
       width: this.props.config.box.width,
       height: this.props.config.box.height,
     }
-    for (let i = 0; i < this.props.config.boxList.boxNum; i++) {
-      const hours = Math.ceil(offsetMinutes * (i + 1) / 60)
-      const timeStr = hours <= 12 ? `上午${hours}点` : `下午${hours}点`
-      if (i % 2) {
-        navs.push(<span style={style} className='evenSpan' key={i}></span>)
-      } else {
-        navs.push(<span style={style} className='oddSpan' key={i}>{timeStr}</span>)
-      }
+    const startHour = this.props.config.timeNav.startHour
+    const endHour = this.props.config.timeNav.endHour
+    for (let i = startHour; i <= endHour; i++) {
+      const timeStr = i <= 12 ? `上午${i}点` : `下午${i}点`
+      navs.push(<span style={style} className='oddSpan' key={i}>{timeStr}</span>)
+      navs.push(<span style={style} className='evenSpan' key={i + 0.5}></span>)
     }
     return (
       <div className='timeNav'>
