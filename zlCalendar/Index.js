@@ -39,6 +39,7 @@ class Index extends React.Component {
 
       header: {
         onWeekChange: () => {},
+        mode: 0,
       },
     }
     this.config = Object.assign(config, this.props.config)

@@ -21,7 +21,7 @@ class Header extends React.Component {
   constructor(props) {
     super(props)
     this.currentWeekIndex = 0
-    this.state = {days: this.getWeekDays(0), mode: modeType.NORMAL}
+    this.state = {days: this.getWeekDays(0), mode: this.props.config.header.mode}
   }
 
   render() {
