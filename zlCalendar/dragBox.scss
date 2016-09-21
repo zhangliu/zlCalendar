@@ -1,0 +1,43 @@
+.dragBox {
+  position: absolute;
+  background-color: rgb(248, 58, 34);
+  border: 1px solid rgb(166, 66, 50);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+
+  div {
+    color: white;
+    margin: auto;
+  }
+
+  span {
+    height: 3px;
+    width: 10px;
+    border: solid #222;
+    border-width: 1px 0px;
+    margin: 2px auto;
+    align-self: flex-end;
+  }
+}
+
+.dragingBox {
+  @extend .dragBox;
+  opacity: 0.8;
+
+  span {
+    display: none;
+  }
+}
+
+.dragedBox {
+  @extend .dragBox;
+  opacity: 0.8;
+
+  span {
+    display: inherit;
+    cursor: row-resize;
+  }
+}

@@ -1,0 +1,25 @@
+.header {
+  margin-bottom: 10px;
+  display: inline-flex;
+  flex-direction: column;
+  .oprator {
+    align-self: flex-end;
+    margin: 8px 0px;
+    button {
+      margin: 1px;
+    }
+    .repeat {
+      margin-right: 20px;
+    }
+  }
+  .days {
+    border-right: 1px solid #ddd;
+    display: inline-block;
+    span {
+      display: inline-block;
+      text-align: center;
+      border: 1px solid #ddd;
+      border-right: 0px;
+    }
+  }
+}
