@@ -7,7 +7,6 @@ import './boxTable.scss'
 class BoxTable extends React.Component {
   constructor(props) {
     super(props)
-    this.onDragOver = this.onDragOver.bind(this)
     this.currentBox = null
   }
 
@@ -18,32 +17,11 @@ class BoxTable extends React.Component {
     }
     return (
       <div
-        className='boxTable'
-        onDragOver={this.onDragOver}>
+        className='boxTable'>
         {boxTable}
       </div>
     )
 
-  }
-
-  onDragOver(e) {
-    const currentBox = this.getCurrentBox(e)
-    if (this.currentBox
-      && this.currentBox.boxListIndex === currentBox.boxListIndex
-      && this.currentBox.boxIndex === currentBox.boxIndex) {
-      return
-    }
-    this.currentBox = currentBox
-    this.props.onUpdateDragOverBox(currentBox)
-  }
-
-  getCurrentBox(e) {
-    const position = mouseHelper.getRelativePosition(e)
-    const currentBox = {
-      boxListIndex: Math.floor(position.left / this.props.config.box.width),
-      boxIndex: Math.floor(position.top / this.props.config.box.height),
-    }
-    return currentBox
   }
 }
 

@@ -9,8 +9,6 @@ class DragBox extends React.Component {
     this.onMouseMove = this.onMouseMove.bind(this)
     this.onMouseUp = this.onMouseUp.bind(this)
     this.onDragSpanMouseDown = this.onDragSpanMouseDown.bind(this)
-    this.onDragStart = this.onDragStart.bind(this)
-    this.onDragOver = this.onDragOver.bind(this)
     this.boxConfig = this.props.config.box
     this.currentBox = null
   }
@@ -33,15 +31,10 @@ class DragBox extends React.Component {
       height: height,
       backgroundColor: this.props.config.dragBox.backgroundColor,
     }
-
     return (
       <div
-        draggable={this.props.data.endBox ? true : false}
         className={this.props.data.endBox ? 'dragedBox' : 'dragingBox'}
         style={style}
-        onDragStart={this.onDragStart}
-        onDragOver={this.onDragOver}
-        onDragEnd={this.onDragEnd}
         onMouseMove={this.onMouseMove}
         onMouseUp={this.onMouseUp}>
         <div>{this.props.data.content}</div>
@@ -86,28 +79,11 @@ class DragBox extends React.Component {
 
   onMouseUp(e) {
     const currentBox = this.getCurrentBox(e)
-    this.props.onUpdateEndBox(currentBox)
+    this.props.onUpdateEndBox(currentBox, e)
   }
 
   onDragSpanMouseDown() {
     this.props.onDeleteEndBox(this.props.data.id)
-  }
-
-  onDragStart(e) {
-    const currentBox = this.getCurrentBox(e)
-    e.dataTransfer.setDragImage(this.props.config.dragBox.dragImg, 0, 0);
-    this.props.onUpdateDragStartBox(this.props.data.id, currentBox)
-  }
-
-  onDragOver(e) {
-    const currentBox = this.getCurrentBox(e)
-    if (this.currentBox
-      && this.currentBox.boxListIndex === currentBox.boxListIndex
-      && this.currentBox.boxIndex === currentBox.boxIndex) {
-      return
-    }
-    this.currentBox = currentBox
-    this.props.onUpdateDragOverBox(currentBox)
   }
 }
 

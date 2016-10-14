@@ -12,16 +12,11 @@ const WEEK_DAYS = {
   0: '周日',
 }
 
-const modeType = {
-  REPEAT: 0,
-  NORMAL: 1,
-}
-
 class Header extends React.Component {
   constructor(props) {
     super(props)
     this.currentWeekIndex = 0
-    this.state = {days: this.getWeekDays(0), mode: this.props.config.header.mode}
+    this.state = {days: this.getWeekDays(0)}
   }
 
   render() {
@@ -31,7 +26,6 @@ class Header extends React.Component {
     return (
       <div className='header'>
         <div className='oprator'>
-          <button className='repeat' onClick={() => this.changeMode(modeType.REPEAT)}>重复周</button>
           <button onClick={() => this.onClick(-1)}>上一周</button>
           <button onClick={() => this.onClick(-this.currentWeekIndex)}>当前周</button>
           <button onClick={() => this.onClick(1)}>下一周</button>
@@ -40,12 +34,9 @@ class Header extends React.Component {
           <span className='spanColumn' key={-1} style={spanStyle}>&nbsp;</span>
           {
             this.state.days.map(day => {
-              const displayStr = this.state.mode === modeType.NORMAL
-                ? `${day.dateString}（${day.weekString}）`
-                : day.weekString
+              const displayStr = `${day.dateString}（${day.weekString}）`
               return <span className='spanColumn' key={day.id} style={spanStyle}>{displayStr}</span>
-            }
-            )
+            })
           }
         </div>
       </div>
@@ -74,15 +65,8 @@ class Header extends React.Component {
   onClick(weekIndex) {
     const days = this.getWeekDays(weekIndex)
     this.state.days = days
-    this.state.mode = modeType.NORMAL
     this.setState(this.state)
     this.props.onWeekChange(days[0].time, days[days.length - 1].time)
-  }
-
-  changeMode(type) {
-    this.state.mode = type
-    this.setState(this.state)
-    // this.props.onWeekRepeat()
   }
 }
 

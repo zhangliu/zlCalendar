@@ -7,17 +7,7 @@ import App from './zlCalendar'
 
 const config = {
   dragBox: {
-    onOver: (obj) => {
-      obj.setContent(`${obj.startBox.boxListIndex}:${obj.startBox.boxIndex}
-        ~
-        ${obj.endBox.boxListIndex}:${obj.endBox.boxIndex}`)
-    },
-
-    onChange: (obj) => {
-      obj.setContent(`${obj.startBox.boxListIndex}:${obj.startBox.boxIndex}
-        ~
-        ${obj.endBox.boxListIndex}:${obj.endBox.boxIndex}`)
-    },
+    onChange: (obj) => {},
   },
 
   header: {

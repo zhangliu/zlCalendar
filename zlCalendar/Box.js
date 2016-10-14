@@ -40,12 +40,12 @@ class Box extends React.Component {
     this.props.onUpdateOverBox(box)
   }
 
-  onMouseUp() {
+  onMouseUp(e) {
     const box = {
       boxListIndex: this.props.boxListIndex,
       boxIndex: this.props.boxIndex,
     }
-    this.props.onUpdateEndBox(box)
+    this.props.onUpdateEndBox(box, e)
   }
 }
 
