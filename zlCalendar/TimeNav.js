@@ -4,8 +4,6 @@ import mouseHelper from './libs/mouseHelper'
 
 import './timeNav.scss'
 
-const MINUTES = 24 * 60
-
 class TimeNav extends React.Component {
   constructor(props) {
     super(props)
@@ -16,13 +14,14 @@ class TimeNav extends React.Component {
     const style = {
       width: this.props.config.box.width,
       height: this.props.config.box.height,
+      lineHeight: `${this.props.config.box.height}px`,
     }
-    const startHour = this.props.config.timeNav.startHour
-    const endHour = this.props.config.timeNav.endHour
-    for (let i = startHour; i <= endHour; i++) {
-      const timeStr = i <= 12 ? `上午${i}点` : `下午${i}点`
-      navs.push(<span style={style} className='oddSpan' key={i}>{timeStr}</span>)
-      navs.push(<span style={style} className='evenSpan' key={i + 0.5}></span>)
+    const scopes = this.props.config.timeNav.scopes
+    const keys = Object.keys(scopes)
+    let i = 0
+    for (const key of keys) {
+      const className = i % 2 ? 'evenSpan' : 'oddSpan'
+      navs.push(<span style={style} className={className} key={i++}>{key}</span>)
     }
     return (
       <div className='timeNav'>

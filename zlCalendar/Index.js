@@ -15,11 +15,11 @@ class Index extends React.Component {
     const config = {
       box: {
         width: 120, // 单位px
-        height: 20,
+        height: 50,
       },
 
       boxList: {
-        boxNum: 28,
+        boxNum: 10,
       },
 
       boxTable: {
@@ -34,6 +34,7 @@ class Index extends React.Component {
         //   AAAC0lEQVR42mNgAAIAAAUAAen63NgAAAAASUVORK5CYII=`
         //   return img
         // })(),
+        onClick: () => {},
         onChange: () => {},
       },
 
@@ -44,6 +45,18 @@ class Index extends React.Component {
       timeNav: {
         startHour: 8,
         endHour: 21,
+        scopes: {
+          A1: [8 * 60 + 30, 9 * 60 + 30],
+          A2: [9 * 60 + 30, 10 * 60 + 30],
+          B1: [10 * 60 + 40, 11 * 60 + 40],
+          B2: [11 * 60 + 40, 12 * 60 + 40],
+          C1: [13 * 60 + 30, 14 * 60 + 30],
+          C2: [14 * 60 + 30, 15 * 60 + 30],
+          D1: [15 * 60 + 40, 16 * 60 + 40],
+          D2: [16 * 60 + 40, 17 * 60 + 40],
+          E1: [18 * 60 + 30, 19 * 60 + 30],
+          E2: [19 * 60 + 30, 20 * 60 + 30],
+        },
       },
     }
     this.config = deepAssign(config, this.props.config)
@@ -115,7 +128,6 @@ class Index extends React.Component {
     }
     history.overBox = box
     this.setState(this.state)
-
     this.config.dragBox.onChange(history)
   }
 
@@ -163,6 +175,17 @@ class Index extends React.Component {
 
   setMouseHistories(mouseHistories) {
     this.state.mouseHistories = mouseHistories
+    this.setState(this.state)
+  }
+
+  setMouseHistorie(history) {
+    if (!history) {
+      return
+    }
+    let data = this.state.mouseHistories.find(h => h.id === history.id)
+    if (data) {
+      data = Object.assign(data, history)
+    }
     this.setState(this.state)
   }
 }

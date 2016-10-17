@@ -2,12 +2,12 @@
   display: inline-flex;
   flex-direction: column;
   float: left;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #ddd;
 
   .span {
     display: inline-block;
     text-align: center;
-    border: 1px solid #eee;
+    border: 1px solid #ddd;
     border-width: 1px 0px 0px 1px;
   }
 
@@ -17,6 +17,6 @@
 
   .evenSpan {
     @extend .span;
-    border-top-color: transparent;
+    border-top: 1px dotted #ddd;
   }
 }

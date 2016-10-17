@@ -6,9 +6,6 @@ import './dragBox.scss'
 class DragBox extends React.Component {
   constructor(props) {
     super(props)
-    this.onMouseMove = this.onMouseMove.bind(this)
-    this.onMouseUp = this.onMouseUp.bind(this)
-    this.onDragSpanMouseDown = this.onDragSpanMouseDown.bind(this)
     this.boxConfig = this.props.config.box
     this.currentBox = null
   }
@@ -35,10 +32,11 @@ class DragBox extends React.Component {
       <div
         className={this.props.data.endBox ? 'dragedBox' : 'dragingBox'}
         style={style}
-        onMouseMove={this.onMouseMove}
-        onMouseUp={this.onMouseUp}>
-        <div>{this.props.data.content}</div>
-        <span onMouseDown={this.onDragSpanMouseDown}></span>
+        onMouseMove={this.onMouseMove.bind(this)}
+        onClick={this.onClick.bind(this)}
+        onMouseUp={this.onMouseUp.bind(this)}>
+        <div>{this.props.data.title}<br/>{this.props.data.content}</div>
+        <span onMouseDown={this.onDragSpanMouseDown.bind(this)}></span>
       </div>
     )
   }
@@ -80,6 +78,10 @@ class DragBox extends React.Component {
   onMouseUp(e) {
     const currentBox = this.getCurrentBox(e)
     this.props.onUpdateEndBox(currentBox, e)
+  }
+
+  onClick(e) {
+    this.props.config.dragBox.onClick(this.props.data, e)
   }
 
   onDragSpanMouseDown() {
