@@ -43,8 +43,6 @@ class Index extends React.Component {
       },
 
       timeNav: {
-        startHour: 8,
-        endHour: 21,
         scopes: {
           A1: [8 * 60 + 30, 9 * 60 + 30],
           A2: [9 * 60 + 30, 10 * 60 + 30],

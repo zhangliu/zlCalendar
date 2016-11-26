@@ -7,19 +7,24 @@
   flex-direction: column;
   justify-content: center;
   align-items: flex-end;
+  padding: 0px 8px;
 
   div {
     color: white;
     margin: auto;
   }
 
-  span {
+  .dragSpan {
     height: 3px;
     width: 10px;
     border: solid #222;
     border-width: 1px 0px;
     margin: 2px auto;
     align-self: flex-end;
+  }
+
+  .titleSpan {
+    font-weight: bold;
   }
 }
 

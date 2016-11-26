@@ -35,8 +35,11 @@ class DragBox extends React.Component {
         onMouseMove={this.onMouseMove.bind(this)}
         onClick={this.onClick.bind(this)}
         onMouseUp={this.onMouseUp.bind(this)}>
-        <div>{this.props.data.title}<br/>{this.props.data.content}</div>
-        <span onMouseDown={this.onDragSpanMouseDown.bind(this)}></span>
+        <div>
+          <span className='titleSpan'>{this.props.data.title}</span>
+          <span>{this.props.data.content}</span>
+        </div>
+        <span className='dragSpan' onMouseDown={this.onDragSpanMouseDown.bind(this)}></span>
       </div>
     )
   }
